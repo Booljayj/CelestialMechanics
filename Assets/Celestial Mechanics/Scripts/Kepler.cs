@@ -197,9 +197,9 @@ public static class Kepler {
 			uvs[4*i+3] = new Vector3(0f,1f);
 			
 			//tri 1
-			triangles[6*i+0] = 4*i+0;
+			triangles[6*i+0] = 4*i+2;
 			triangles[6*i+1] = 4*i+1;
-			triangles[6*i+2] = 4*i+2;
+			triangles[6*i+2] = 4*i+0;
 			//tri 2
 			triangles[6*i+3] = 4*i+1;
 			triangles[6*i+4] = 4*i+2;
@@ -210,10 +210,10 @@ public static class Kepler {
 		mesh.uv = uvs;
 		mesh.triangles = triangles;
 		
+		mesh.Optimize();
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
-		mesh.Optimize();
-
+		
 		return mesh;
 	}
 	#endregion

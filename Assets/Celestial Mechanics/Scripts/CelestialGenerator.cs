@@ -4,7 +4,7 @@ using System.Collections;
 using Random = UnityEngine.Random;
 
 namespace CelestialMechanics {
-public class CelestialGenerator : MonoBehaviour {
+	public class CelestialGenerator : MonoBehaviour {
 		public Vector2 numberOfPlanets = new Vector2(3f, 10f);
 		public Vector2 numberOfMoons = new Vector2(1f, 10f);
 
@@ -69,5 +69,5 @@ public class CelestialGenerator : MonoBehaviour {
 
 			return orbitObj;
 		}
-}
+	}
 }
