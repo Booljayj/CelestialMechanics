@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace CelestialMechanics {
 	public class CelestialOrbit : MonoBehaviour {
 		const double Deg2Rad = Math.PI/180.0;
-		const double Tau = Math.PI*2.0;
 
+		#region Fields
 		//input fields
 		[SerializeField] double _semiMajorAxis = 1.0; //[m]
 		public double semiMajorAxis {
@@ -17,6 +17,7 @@ namespace CelestialMechanics {
 				semiLatusRectum = Kepler.ComputeSemiLatusRectum(_semiMajorAxis, _eccentricity);
 			}
 		}
+
 		[SerializeField] double _eccentricity = 0.4; //[1]
 		public double eccentricity {
 			get {return _eccentricity;}
@@ -25,6 +26,7 @@ namespace CelestialMechanics {
 				semiLatusRectum = Kepler.ComputeSemiLatusRectum(_semiMajorAxis, _eccentricity);
 			}
 		}
+
 		[SerializeField] float _argument = 0.0f; //[degrees]
 		public float argument {
 			get {return _argument;}
@@ -33,6 +35,7 @@ namespace CelestialMechanics {
 				orientation = Kepler.ComputeOrientation(_argument, _longitude, _inclination);
 			}
 		}
+
 		[SerializeField] float _longitude = 0.0f; //[degrees]
 		public float longitude {
 			get {return _longitude;}
@@ -41,6 +44,7 @@ namespace CelestialMechanics {
 				orientation = Kepler.ComputeOrientation(_argument, _longitude, _inclination);
 			}
 		}
+
 		[SerializeField] float _inclination = 0.0f; //[degrees]
 		public float inclination {
 			get {return _inclination;}
@@ -52,7 +56,8 @@ namespace CelestialMechanics {
 
 		//control fields
 		public bool simulate = true;
-		[SerializeField] Vector2 _limits = new Vector2(-180,180);
+
+		[SerializeField] Vector2 _limits = new Vector2(-180,180); //[degrees]
 		public Vector2 limits {
 			get {return _limits;}
 			set {
@@ -60,7 +65,9 @@ namespace CelestialMechanics {
 				rate = Kepler.ComputeRate(_period, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
 			}
 		}
+
 		public double meanAnomaly = 0.0; //[degrees]
+
 		[SerializeField] double _period = 10; //[seconds/orbit]
 		public double period {
 			get {return _period;}
@@ -69,9 +76,13 @@ namespace CelestialMechanics {
 				rate = Kepler.ComputeRate(_period, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
 			}
 		}
-		public double timeScale = 1.0;
-		public double startEpoch = 0.0; //[seconds]
 
+		public double timeScale = 1.0;
+
+		public double startEpoch = 0.0; //[seconds]
+		#endregion
+
+		#region Properties
 		//static properties
 		public Quaternion orientation {get; private set;}
 		public double semiLatusRectum {get; private set;} //[m]
@@ -84,17 +95,16 @@ namespace CelestialMechanics {
 		public double radius {get; private set;} //[m]
 		public Vector3 position {get; private set;}
 		public Vector3 velocity {get; private set;}
+		#endregion
 
-		//gizmo fields
-		Vector3[] path;
-
+		#region Messages
 		void Start() {
 			ResetSimulation();
 		}
 
 		void OnEnable() {
 			ComputeStaticProperties();
-			ComputeDynamicProperties(meanAnomaly*Deg2Rad + startEpoch * rate);
+			ComputeDynamicProperties(anomaly);
 			transform.localRotation = orientation;
 			transform.localPosition = position;
 		}
@@ -103,6 +113,17 @@ namespace CelestialMechanics {
 			if (simulate) {UpdateSimulation();}
 		}
 
+		void OnValidate() {
+			if (_eccentricity < 0) _eccentricity *= -1.0;
+			if (_semiMajorAxis < 0) _semiMajorAxis *= -1.0;
+
+			Start();
+			OnEnable();
+			SetupGizmos();
+		}
+		#endregion
+
+		#region Computation
 		/// <summary>Compute static properties for orbit shape and speed</summary>
 		public void ComputeStaticProperties() {
 			orientation = Kepler.ComputeOrientation(argument, longitude, inclination);
@@ -120,6 +141,32 @@ namespace CelestialMechanics {
 			velocity = orientation * Kepler.ComputeVelocity(_semiMajorAxis, radius, rate, eccentricAnomaly, eccentricity);
 		}
 
+		//TODO: Define function for adding dV
+		//requires dynamic properties to be set up in ComputeProperties for initial conditions
+		//not strictly necessary, but would greatly help when integrating physics
+		public void AddVelocity(Vector3 dV) {
+			
+		}
+		#endregion
+
+		#region Simulation
+		public void StartSimulation() {simulate = true;}
+		public void StopSimulation() {simulate = false;}
+
+		public void ResetSimulation() {
+			anomaly = Kepler.WrapAngle(meanAnomaly*Deg2Rad + startEpoch * rate, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
+		}
+
+		public void UpdateSimulation() {
+			anomaly = Kepler.WrapAngle(anomaly + Time.deltaTime * rate * timeScale, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
+			ComputeDynamicProperties(anomaly);
+			transform.localPosition = position;
+		}
+		#endregion
+
+		#region Gizmos
+		Vector3[] path;
+
 		void SetupGizmos() {
 			path = new Vector3[51];
 			double step, lower;
@@ -134,34 +181,6 @@ namespace CelestialMechanics {
 				r = Kepler.ComputeRadius(semiLatusRectum, _eccentricity, v);
 				path[i] = Kepler.ComputePosition(r, v);
 			}
-		}
-
-		void OnValidate() {
-			if (_eccentricity < 0) _eccentricity *= -1.0;
-			if (_semiMajorAxis < 0) _semiMajorAxis *= -1.0;
-
-			OnEnable();
-			SetupGizmos();
-		}
-
-		public void StartSimulation() {simulate = true;}
-		public void StopSimulation() {simulate = false;}
-
-		public void ResetSimulation() {
-			anomaly = Kepler.WrapAngle(meanAnomaly*Deg2Rad + startEpoch * rate, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
-		}
-
-		public void UpdateSimulation() {
-			anomaly = Kepler.WrapAngle(anomaly + Time.deltaTime * rate * timeScale, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
-			ComputeDynamicProperties(anomaly);
-			transform.localPosition = position;
-		}
-
-		//TODO: Define function for adding dV
-		//requires dynamic properties to be set up in ComputeProperties for initial conditions
-		//not strictly necessary, but would greatly help when integrating physics
-		public void AddVelocity(Vector3 dV) {
-			
 		}
 
 		void OnDrawGizmosSelected() {
@@ -180,5 +199,6 @@ namespace CelestialMechanics {
 			Gizmos.color = Color.blue;
 			Gizmos.DrawLine(Vector3.zero, orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, eccentricity, trueAnomaly), trueAnomaly));
 		}
+		#endregion
 	}
 }
