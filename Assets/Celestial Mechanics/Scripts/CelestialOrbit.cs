@@ -68,6 +68,7 @@ namespace CelestialMechanics {
 
 		public double meanAnomaly = 0.0; //[degrees]
 
+		//time fields
 		[SerializeField] double _period = 10; //[seconds/orbit]
 		public double period {
 			get {return _period;}
@@ -145,7 +146,7 @@ namespace CelestialMechanics {
 		//requires dynamic properties to be set up in ComputeProperties for initial conditions
 		//not strictly necessary, but would greatly help when integrating physics
 		public void AddVelocity(Vector3 dV) {
-			
+			throw new NotImplementedException("Cannot add delta-v to an orbit yet");
 		}
 		#endregion
 

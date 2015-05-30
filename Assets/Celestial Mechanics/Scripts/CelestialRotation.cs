@@ -3,37 +3,67 @@ using System;
 using System.Collections;
 
 namespace CelestialMechanics {
-	public class CelestialRotation : MonoBehaviour {
+	public class CelestialRotation : MonoBehaviour, ISimulation {
 		const double Deg2Rad = Math.PI/180.0;
-		const double Tau = Math.PI*2.0;
 
+		#region Fields
 		//input fields
-		public float rightAscension = 0f;
-		public float declination = 0f;
+		[SerializeField] float _rightAscension = 0f; //[deg]
+		public float rightAscension {
+			get {return _rightAscension;}
+			set {
+				_rightAscension = value;
+				axis = Kepler.ComputeAxis(_rightAscension, _declination);
+			}
+		}
+
+		[SerializeField] float _declination = 0f; //[deg]
+		public float declination {
+			get {return _declination;}
+			set {
+				_declination = value;
+				axis = Kepler.ComputeAxis(_rightAscension, _declination);
+			}
+		}
 
 		//control fields
 		public bool simulate = true;
-		public float meanAngle = 0.0f;
-		public double period = 10.0;
-		public double timeScale = 1.0;
-		public double startEpoch = 0.0;
 
+		public float meanAngle = 0.0f; //[deg]
+
+		//time fields
+		[SerializeField] double _period = 10.0; //[s]
+		public double period {
+			get {return _period;}
+			set {
+				_period = value;
+				rate = Kepler.ComputeRate(_period, -Math.PI, Math.PI);
+			}
+		}
+
+		public double timeScale = 1.0;
+
+		public double startEpoch = 0.0; //[s]
+		#endregion
+
+		#region Properties
 		//static properties
 		public Quaternion axis {get; private set;}
-		public double rate {get; private set;}
+		public double rate {get; private set;} //[rad/s]
 
 		//dynamic properties
-		public double angle {get; private set;}
+		public double angle {get; private set;} //[rad]
 		public Quaternion rotation {get; private set;}
-		public Vector3 angularVelocity {get; private set;}
+		#endregion
 
+		#region Messages
 		void Start() {
 			ResetSimulation();
 		}
 
 		void OnEnable() {
 			ComputeStaticProperties();
-			ComputeDynamicProperties(meanAngle*Deg2Rad + startEpoch * rate);
+			ComputeDynamicProperties(angle);
 			transform.localRotation = rotation;
 		}
 
@@ -41,20 +71,27 @@ namespace CelestialMechanics {
 			if (simulate) UpdateSimulation();
 		}
 
-		public void ComputeStaticProperties() {
-			axis = Kepler.ComputeAxis(rightAscension, declination);
-			rate = Kepler.ComputeRate(period, -Math.PI, Math.PI);
-		}
-
-		public void ComputeDynamicProperties(double angle) {
-			rotation = Kepler.ComputeRotation(axis, angle/Deg2Rad);
-			angularVelocity = Kepler.ComputeAngularVelocity(axis, rate);
-		}
-
 		void OnValidate() {
+			Start();
 			OnEnable();
 		}
+		#endregion
 
+		#region Computation
+		/// <summary>Computes static properties for rotational axis and speed</summary>
+		public void ComputeStaticProperties() {
+			axis = Kepler.ComputeAxis(_rightAscension, _declination);
+			rate = Kepler.ComputeRate(_period, -Math.PI, Math.PI);
+		}
+
+		/// <summary>Compute dynamic properties that change over the angle</summary>
+		/// <param name="M">The angle to evaluate properties at</param>
+		public void ComputeDynamicProperties(double angle) {
+			rotation = Kepler.ComputeRotation(axis, angle/Deg2Rad);
+		}
+		#endregion
+
+		#region Simulation
 		public void StartSimulation() {simulate = true;}
 		public void EndSimulation() {simulate = false;}
 
@@ -67,10 +104,13 @@ namespace CelestialMechanics {
 			ComputeDynamicProperties(angle);
 			transform.localRotation = rotation;
 		}
+		#endregion
 
+		#region Gizmos
 		void OnDrawGizmosSelected() {
 			Gizmos.DrawRay(transform.position, transform.up);
 			Gizmos.DrawRay(transform.position, transform.right);
 		}
+		#endregion
 	}
 }

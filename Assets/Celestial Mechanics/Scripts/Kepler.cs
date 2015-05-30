@@ -144,14 +144,6 @@ namespace CelestialMechanics {
 		public static Quaternion ComputeRotation(Quaternion axis, double angle) {
 			return axis * Quaternion.Euler(0f, -(float)angle, 0f);
 		}
-
-		/// <summary>Compute the angular velocity of a rotating body</summary>
-		/// <param name="axis">axial orientation of the body</param>
-		/// <param name="rate">magnitude of angular velocity [degrees/second]</param>
-		/// <returns>Vector3</returns>
-		public static Vector3 ComputeAngularVelocity(Quaternion axis, double rate) {
-			return Vector3.zero;
-		}
 		#endregion
 
 		#region Mesh Generators
