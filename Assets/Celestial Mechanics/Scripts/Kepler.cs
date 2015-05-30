@@ -22,6 +22,20 @@ namespace CelestialMechanics {
 				return lower + (angle - lower) % (upper - lower);
 		}
 
+		/// <summary>Wraps an angle value between lower and upper.</summary>
+		/// <returns>Wrapped angle</returns>
+		/// <param name="angle">Angle</param>
+		/// <param name="lower">Lower</param>
+		/// <param name="upper">Upper</param>
+		public static float WrapAngle(float angle, float lower, float upper) {
+			if (angle > lower && angle < upper)
+				return angle;
+			else if (angle < lower)
+				return upper - (lower - angle) % (upper - lower);
+			else
+				return lower + (angle - lower) % (upper - lower);
+		}
+
 		/// <summary>Compute the rotation defining the orbital plane coordinate system</summary>
 		/// <param name="o">longitude of the ascending node [degrees]</param>
 		/// <param name="w">argument of the periapsis [degrees]</param>

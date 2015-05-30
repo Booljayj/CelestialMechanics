@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace CelestialMechanics {
-	public class CelestialOrbit : MonoBehaviour {
+	public class CelestialOrbit : MonoBehaviour, ISimulation {
 		const double Deg2Rad = Math.PI/180.0;
 
 		#region Fields

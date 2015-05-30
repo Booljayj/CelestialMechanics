@@ -93,7 +93,7 @@ namespace CelestialMechanics {
 
 		#region Simulation
 		public void StartSimulation() {simulate = true;}
-		public void EndSimulation() {simulate = false;}
+		public void StopSimulation() {simulate = false;}
 
 		public void ResetSimulation() {
 			angle = Kepler.WrapAngle(meanAngle*Deg2Rad + startEpoch * rate, 0, 2*Math.PI);
