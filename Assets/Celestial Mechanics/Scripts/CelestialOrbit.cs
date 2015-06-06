@@ -66,6 +66,8 @@ namespace CelestialMechanics {
 			}
 		}
 
+		public WrapMode ending = WrapMode.Loop;
+
 		public double meanAnomaly = 0.0; //[degrees]
 
 		//time fields
@@ -148,6 +150,31 @@ namespace CelestialMechanics {
 		public void AddVelocity(Vector3 dV) {
 			throw new NotImplementedException("Cannot add delta-v to an orbit yet");
 		}
+
+		void WrapAnomaly() {
+			if (anomaly < _limits.x*Deg2Rad || anomaly > _limits.y*Deg2Rad) {
+				switch (ending) {
+				case WrapMode.Clamp:
+					simulate = false;
+					ResetSimulation();
+					break;
+				case WrapMode.ClampForever:
+					gameObject.SetActive(false);
+					ResetSimulation();
+					break;
+				case WrapMode.PingPong:
+					if (anomaly < _limits.x*Deg2Rad) {
+						anomaly = 2*_limits.x*Deg2Rad - anomaly;
+					} else {
+						anomaly = 2*_limits.y*Deg2Rad - anomaly;
+					}
+					timeScale *= -1.0;
+					break;
+				}
+
+				anomaly = Kepler.WrapAngle(anomaly, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
+			}
+		}
 		#endregion
 
 		#region Simulation
@@ -159,7 +186,8 @@ namespace CelestialMechanics {
 		}
 
 		public void UpdateSimulation() {
-			anomaly = Kepler.WrapAngle(anomaly + Time.deltaTime * rate * timeScale, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
+			anomaly += Time.deltaTime * rate * timeScale;
+			WrapAnomaly();
 			ComputeDynamicProperties(anomaly);
 			transform.localPosition = position;
 		}

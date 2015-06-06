@@ -7,7 +7,7 @@ namespace CelestialMechanics {
 [CustomEditor(typeof(CelestialOrbit))]
 public class CelestialOrbitEditor : Editor {
 	SerializedProperty a, e, argument, longitude, inclination;
-	SerializedProperty sim, limits, M0, T, tscale, epoch;
+	SerializedProperty sim, limits, ending, M0, T, tscale, epoch;
 
 	GUIContent aGUI = new GUIContent("Semi-Major Axis",
 		"Range: 0 to Inf \n" +
@@ -44,6 +44,9 @@ public class CelestialOrbitEditor : Editor {
 	GUIContent limGUI = new GUIContent("Limits",
 		"Range: -Inf to Inf \n" +
 		"Lower and Upper anomaly limits");
+	GUIContent endGUI = new GUIContent("Ending",
+	    "Behaviour when orbit reaches its limits");
+
 
 	void OnEnable() {
 		a = serializedObject.FindProperty("_semiMajorAxis");
@@ -59,6 +62,7 @@ public class CelestialOrbitEditor : Editor {
 		epoch = serializedObject.FindProperty("startEpoch");
 
 		limits = serializedObject.FindProperty("_limits");
+		ending = serializedObject.FindProperty("ending");
 	}
 
 	public override void OnInspectorGUI() {
@@ -74,6 +78,7 @@ public class CelestialOrbitEditor : Editor {
 		EditorGUILayout.LabelField("Control", EditorStyles.boldLabel);
 		EditorGUILayout.PropertyField(sim, simGUI);
 		EditorGUILayout.PropertyField(limits, limGUI);
+		EditorGUILayout.PropertyField(ending);
 		EditorGUILayout.Slider(M0, limits.vector2Value.x, limits.vector2Value.y, M0GUI);
 		EditorGUILayout.PropertyField(T, TGUI);
 		EditorGUILayout.PropertyField(tscale, tscGUI);
