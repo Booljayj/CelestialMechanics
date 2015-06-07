@@ -4,8 +4,8 @@ using System.Collections;
 
 namespace CelestialMechanics {
 	public static class Kepler {
-		const int maxIterations = 200;
-		const double tolerance = 0.0001;
+		static int maxIterations = 200;
+		static double tolerance = 0.0001;
 
 		#region Computation
 		/// <summary>Wraps an angle value between lower and upper.</summary>
@@ -131,16 +131,20 @@ namespace CelestialMechanics {
 		}
 
 		/// <summary>Compute the velocity of the body within the orbital plane</summary>
+		/// <param name="a">semi-major axis [m]</param>
 		/// <param name="r">radius [m]</param>
+		/// <param name="n">rate [rad/second]</param>
 		/// <param name="E">eccentric anomaly [rad]</param>
 		/// <param name="e">eccentricity [1]</param>
-		/// <param name="n">rate [rad/second]</param>
 		/// <returns>Velocity Vector</returns>
+		// TODO: support hyperbolic and parabolic orbits
 		public static Vector3 ComputeVelocity(double a, double r, double n, double E, double e) {
-			Vector3 vel = new Vector3((float)(-Math.Sin(E)),
-			                          0f,
-			                          (float)(Math.Sqrt(1-e*e)*Math.Cos(E)));
-			return (float)((a*a)/(n*r)) * vel;
+			//if (e < 1) {
+				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
+			    	                      0f,
+			        	                  (float)(Math.Sqrt(1-e*e)*Math.Cos(E)));
+				return (float)((a*a)/(n*r)) * vel;
+			//}
 		}
 
 		/// <summary>Compute the axis a body will rotate around</summary>
@@ -241,7 +245,9 @@ namespace CelestialMechanics {
 				else
 					E0 = E;
 			}
-			throw new Exception(string.Format("Max iterations reached without convergence: e={0} M={1}", e.ToString(), M.ToString()));
+			throw new Exception(string.Format("Max iterations reached without convergence: e={0} M={1}\n" +
+				"Consider using eccentricity values that are farther from 1 or anomaly values closer to 0",
+				e.ToString(), M.ToString()));
 		}
 
 		// M = E + E^3/3
@@ -259,7 +265,9 @@ namespace CelestialMechanics {
 				else
 					E0 = E;
 			}
-			throw new Exception(string.Format("Max iterations reached without convergence: e={0} M={1}", e.ToString(), M.ToString()));
+			throw new Exception(string.Format("Max iterations reached without convergence: e={0} M={1}\n" +
+				"Consider using eccentricity values that are farther from 1 or anomaly values closer to 0",
+				e.ToString(), M.ToString()));
 		}
 				
 		// M = e*sinh(E) - E
@@ -277,7 +285,9 @@ namespace CelestialMechanics {
 				else
 					E0 = E;
 			}
-			throw new Exception(string.Format("Max iterations reached without convergence: e={0} M={1}", e.ToString(), M.ToString()));
+			throw new Exception(string.Format("Max iterations reached without convergence: e={0} M={1}\n" +
+				"Consider using eccentricity values that are farther from 1 or anomaly values closer to 0",
+				e.ToString(), M.ToString()));
 		}
 		#endregion
 	}
