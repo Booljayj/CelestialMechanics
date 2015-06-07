@@ -225,6 +225,9 @@ namespace CelestialMechanics {
 			}
 			Gizmos.DrawLine(Vector3.zero, orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, eccentricity, 0f), 0f));
 
+			Gizmos.color = Color.magenta;
+			Gizmos.DrawLine(transform.position, transform.position + orientation * velocity);
+
 			Gizmos.color = Color.blue;
 			Gizmos.DrawLine(Vector3.zero, orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, eccentricity, trueAnomaly), trueAnomaly));
 		}
