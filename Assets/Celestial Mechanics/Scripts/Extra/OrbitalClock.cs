@@ -13,7 +13,7 @@ namespace CelestialMechanics {
 			seconds.meanAnomaly = (float)time.Millisecond/1000f*360f;
 			minutes.meanAnomaly = (float)time.Second/60f*360f;
 			hours.meanAnomaly = (float)time.Minute/60f*360f;
-			days.meanAnomaly = (float)time.Hour/24f*360f;
+			days.meanAnomaly = (float)time.Hour/24f*720f;
 
 			seconds.ResetSimulation();
 			minutes.ResetSimulation();
