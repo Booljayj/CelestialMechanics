@@ -36,9 +36,9 @@ namespace CelestialMechanics {
 					v = Kepler.ComputeTrueAnomaly(E, orbit.eccentricity);
 					r = Kepler.ComputeRadius(orbit.semiLatusRectum, orbit.eccentricity, v);
 					if (orbit.transform.parent) {
-						line.SetPosition(i, orbit.transform.parent.TransformPoint(Kepler.ComputePosition(r, v)));
+						line.SetPosition(i, orbit.orientation * orbit.transform.parent.TransformPoint(Kepler.ComputePosition(r, v)));
 					} else {
-						line.SetPosition(i, Kepler.ComputePosition(r, v));
+						line.SetPosition(i, orbit.orientation * Kepler.ComputePosition(r, v));
 					}
 				}
 			}
