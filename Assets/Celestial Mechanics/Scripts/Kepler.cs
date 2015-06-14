@@ -67,6 +67,10 @@ namespace CelestialMechanics {
 		/// <param name="to">To Angle [rad]</param>
 		/// <returns>Rate [rad/second]</returns>
 		public static double ComputeRate(double T, double from, double to) {
+			if (T == 0) {
+				Debug.LogWarning("Period cannot be 0");
+				return 0;
+			}
 			return Math.Abs((from-to)/T);
 		}
 
@@ -139,12 +143,33 @@ namespace CelestialMechanics {
 		/// <returns>Velocity Vector</returns>
 		// TODO: support hyperbolic and parabolic orbits
 		public static Vector3 ComputeVelocity(double a, double r, double n, double E, double e) {
-			//if (e < 1) {
+			if (e == 0) {
+				//circular velocity
+				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
+				                          0f,
+				                          (float)(Math.Cos(E)));
+				return (float)(a * n) * vel;
+			} else if (e < 1) {
+				//elliptical velocity
 				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
 			    	                      0f,
 			        	                  (float)(Math.Sqrt(1-e*e)*Math.Cos(E)));
-				return (float)((a*a)/(n*r)) * vel;
-			//}
+				return (float)((a*a*n)/r) * vel;
+			} else if (e == 1) {
+				//parabolic velocity
+				//TODO: MAKE IT RIGHT!!!!!
+				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
+				                          0f,
+				                          (float)Math.Cos(E));
+				return (float)((a*a*n)/r) * vel;
+			} else {
+				//hyperbolic velocity
+				//TODO: Need a source to check the math on this
+				Vector3 vel = new Vector3((float)(-Math.Sinh(E)),
+				                          0,
+				                          (float)(Math.Sqrt(e*e-1)*Math.Cosh(E)));
+				return (float)((a*a*n)/r) * vel;
+			}
 		}
 
 		/// <summary>Compute the axis a body will rotate around</summary>
@@ -258,9 +283,9 @@ namespace CelestialMechanics {
 			double E = 0;
 
 			for (int i = 0; i < maxIterations; i++) {
-				E = E0 - (E0 + Math.Pow(E,3.0)/3.0 - M)/(1.0 + Math.Pow(E0,2.0));
+				E = E0 - (E0 + E*E*E/3.0 - M)/(1.0 + E0*E0);
 
-				if( Math.Abs(E + Math.Pow(E,3.0)/3.0 - M) < tolerance)
+				if( Math.Abs(E + E*E*E/3.0 - M) < tolerance)
 					return E;
 				else
 					E0 = E;

@@ -122,7 +122,6 @@ namespace CelestialMechanics {
 
 			Start();
 			OnEnable();
-			SetupGizmos();
 		}
 		#endregion
 
@@ -194,10 +193,15 @@ namespace CelestialMechanics {
 		#endregion
 
 		#region Gizmos
-		Vector3[] path;
+		void OnDrawGizmosSelected() {
+			//OnValidate should always be called before this, meaning appropriate values for properties are available
 
-		void SetupGizmos() {
-			path = new Vector3[51];
+			//variables required
+			Vector3[] path = new Vector3[51];
+			Vector3 periapsis = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, 0f), 0f);
+			Vector3 positionV = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, trueAnomaly), trueAnomaly);
+
+			//build list of vectors for path
 			double step, lower;
 			double E, v, r;
 			
@@ -210,26 +214,26 @@ namespace CelestialMechanics {
 				r = Kepler.ComputeRadius(semiLatusRectum, _eccentricity, v);
 				path[i] = Kepler.ComputePosition(r, v);
 			}
-		}
 
-		void OnDrawGizmosSelected() {
-			if (path == null || path.GetLength(0) < 2) return; //sanity check, should never trip
-
+			//Set the gizmos to draw in parent space
 			Gizmos.matrix = (transform.parent)? transform.parent.localToWorldMatrix : Matrix4x4.identity;
 
+			//draw the path of the orbit
 			Gizmos.color = Color.cyan;
 			for (int i = 0; i < 50; i++) {
-				//Debug.Log(orientation);
-				//Debug.Log(path[i]);
 				Gizmos.DrawLine(orientation*path[i], orientation*path[i+1]);
 			}
-			Gizmos.DrawLine(Vector3.zero, orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, eccentricity, 0f), 0f));
 
-			Gizmos.color = Color.magenta;
-			Gizmos.DrawLine(transform.position, transform.position + orientation * velocity);
+			//draw periapsis vector
+			Gizmos.DrawLine(Vector3.zero, periapsis);
 
+			//draw position vector
 			Gizmos.color = Color.blue;
-			Gizmos.DrawLine(Vector3.zero, orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, eccentricity, trueAnomaly), trueAnomaly));
+			Gizmos.DrawLine(Vector3.zero, positionV);
+
+			//draw velocity vector
+			Gizmos.color = Color.magenta;
+			Gizmos.DrawLine(positionV, positionV + velocity);
 		}
 		#endregion
 	}
