@@ -121,8 +121,8 @@ namespace CelestialMechanics {
 			}
 			EditorGUILayout.EndFadeGroup();
 
-			//if orbits are closed, their limits and ending behavior are pre-defined
-			if (!openOrbit.value) {
+			//if orbits are closed, their limits and ending behavior are pre-defined, only update if gui has changed
+			if (!openOrbit.value && GUI.changed) {
 				limits.vector2Value = new Vector2(-180f, 180f);
 				ending.enumValueIndex = 0;
 			}
