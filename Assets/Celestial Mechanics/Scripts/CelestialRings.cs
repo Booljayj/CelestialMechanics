@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace CelestialMechanics {
-	[RequireComponent(typeof(MeshFilter))]
+	[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 	public class CelestialRings : MonoBehaviour {
 		[SerializeField] float innerRadius = 1f;
 		[SerializeField] float outerRadius = 1.5f;
