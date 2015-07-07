@@ -57,6 +57,26 @@ namespace CelestialMechanics {
 			EditorGUILayout.PropertyField(epoch, epoGUI);
 
 			serializedObject.ApplyModifiedProperties();
+
+			if (GUI.changed) {
+				SceneView.RepaintAll();
+			}
+		}
+
+		void OnSceneGUI() {
+			MonoBehaviour t = target as MonoBehaviour;
+			Handles.matrix = t.transform.localToWorldMatrix;
+
+			Handles.color = Color.green;
+			Handles.DrawWireDisc(Vector3.zero, Vector3.up, 1f);
+
+			Handles.color = Color.cyan;
+			Handles.DrawLine(Vector3.zero, Vector3.right);
+
+			Handles.color = Color.red;
+			Handles.DrawLine(Vector3.right, Vector3.right+Vector3.forward);
+
+			Handles.matrix = Matrix4x4.identity;
 		}
 	}
 }

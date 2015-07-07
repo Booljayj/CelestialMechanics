@@ -117,7 +117,7 @@ namespace CelestialMechanics {
 				EditorGUILayout.LabelField(limGUI_high, GUILayout.Width(30f));
 				EditorGUILayout.FloatField(limits.vector2Value.y);
 				EditorGUILayout.EndHorizontal();
-				EditorGUILayout.PropertyField(ending);
+				EditorGUILayout.PropertyField(ending, endGUI);
 			}
 			EditorGUILayout.EndFadeGroup();
 

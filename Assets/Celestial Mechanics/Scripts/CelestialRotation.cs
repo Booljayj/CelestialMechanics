@@ -105,12 +105,5 @@ namespace CelestialMechanics {
 			transform.localRotation = rotation;
 		}
 		#endregion
-
-		#region Gizmos
-		void OnDrawGizmosSelected() {
-			Gizmos.DrawRay(transform.position, transform.up);
-			Gizmos.DrawRay(transform.position, transform.right);
-		}
-		#endregion
 	}
 }
