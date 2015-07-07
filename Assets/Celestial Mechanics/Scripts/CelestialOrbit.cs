@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,7 +57,17 @@ namespace CelestialMechanics {
 		}
 
 		//control fields
-		public bool simulate = true;
+		[SerializeField, FormerlySerializedAs("simulate")] bool _simulate = true;
+		public bool simulate {
+			get {return _simulate;}
+			set {
+				if (_simulate != value) {
+					_simulate = value;
+					if (_simulate) OnOrbitStart.Invoke();
+					else OnOrbitEnd.Invoke();
+				}
+			}
+		}
 
 		[SerializeField] Vector2 _limits = new Vector2(-180,180); //[degrees]
 		public Vector2 limits {
@@ -83,6 +95,11 @@ namespace CelestialMechanics {
 		public double timeScale = 1.0;
 
 		public double startEpoch = 0.0; //[seconds]
+
+		//events
+		public UnityEvent OnOrbitStart;
+		public OrbitEvent OnOrbitUpdate;
+		public UnityEvent OnOrbitEnd;
 		#endregion
 
 		#region Properties
@@ -103,6 +120,7 @@ namespace CelestialMechanics {
 		#region Messages
 		void Start() {
 			ResetSimulation();
+			if (simulate) OnOrbitStart.Invoke();
 		}
 
 		void OnEnable() {
@@ -189,6 +207,8 @@ namespace CelestialMechanics {
 			WrapAnomaly();
 			ComputeDynamicProperties(anomaly);
 			transform.localPosition = position;
+
+			OnOrbitUpdate.Invoke(trueAnomaly);
 		}
 		#endregion
 

@@ -8,6 +8,7 @@ namespace CelestialMechanics {
 	public class CelestialOrbitEditor : Editor {
 		SerializedProperty a, e, argument, longitude, inclination;
 		SerializedProperty sim, limits, ending, M0, T, tscale, epoch;
+		SerializedProperty start, update, end;
 		AnimBool openOrbit;
 
 		//conic section
@@ -70,7 +71,7 @@ namespace CelestialMechanics {
 			longitude = serializedObject.FindProperty("_longitude");
 			inclination = serializedObject.FindProperty("_inclination");
 
-			sim = serializedObject.FindProperty("simulate");
+			sim = serializedObject.FindProperty("_simulate");
 			M0 = serializedObject.FindProperty("meanAnomaly");
 			T = serializedObject.FindProperty("_period");
 			tscale = serializedObject.FindProperty("timeScale");
@@ -79,6 +80,10 @@ namespace CelestialMechanics {
 			limits = serializedObject.FindProperty("_limits");
 
 			ending = serializedObject.FindProperty("ending");
+
+			start = serializedObject.FindProperty("OnOrbitStart");
+			update = serializedObject.FindProperty("OnOrbitUpdate");
+			end = serializedObject.FindProperty("OnOrbitEnd");
 
 			openOrbit = new AnimBool(e.doubleValue < 1? false : true, Repaint);
 		}
@@ -132,6 +137,10 @@ namespace CelestialMechanics {
 			EditorGUILayout.PropertyField(T, TGUI);
 			EditorGUILayout.PropertyField(tscale, tscGUI);
 			EditorGUILayout.PropertyField(epoch, epoGUI);
+
+			EditorGUILayout.PropertyField(start);
+			EditorGUILayout.PropertyField(update);
+			EditorGUILayout.PropertyField(end);
 
 			serializedObject.ApplyModifiedProperties();
 		}
