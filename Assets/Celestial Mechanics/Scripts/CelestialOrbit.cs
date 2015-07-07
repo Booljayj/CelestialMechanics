@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ namespace CelestialMechanics {
 		}
 
 		//control fields
-		[SerializeField, FormerlySerializedAs("simulate")] bool _simulate = true;
+		[SerializeField] bool _simulate = true;
 		public bool simulate {
 			get {return _simulate;}
 			set {
