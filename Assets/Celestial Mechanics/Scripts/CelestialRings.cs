@@ -15,8 +15,8 @@ namespace CelestialMechanics {
 		}
 
 		void OnValidate() {
-			if (innerRadius < 0) innerRadius *= -1f;
-			if (outerRadius < 0) outerRadius *= -1f;
+			if (innerRadius < 0) innerRadius = 0f;
+			if (outerRadius < 0) outerRadius = 0f;
 			Generate();
 		}
 
