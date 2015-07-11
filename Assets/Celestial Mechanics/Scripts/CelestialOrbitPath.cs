@@ -25,20 +25,19 @@ namespace CelestialMechanics {
 				line.SetVertexCount(0);
 
 			} else {
-				double step, lower, E, v, r;
+				double step, lower, upper, r;
 				line.SetVertexCount(segments+1);
 
-				step = (orbit.limits.y - orbit.limits.x)*Deg2Rad/segments;
-				lower = orbit.limits.x*Deg2Rad;
+				upper = Kepler.ComputeTrueAnomaly(Kepler.ComputeEccentricAnomaly(orbit.limits.x*Deg2Rad, orbit.eccentricity), orbit.eccentricity);
+				lower = Kepler.ComputeTrueAnomaly(Kepler.ComputeEccentricAnomaly(orbit.limits.y*Deg2Rad, orbit.eccentricity), orbit.eccentricity);
+				step = (upper - lower)/segments;
 
 				for (int i = 0; i < segments+1; i++) {
-					E = Kepler.ComputeEccentricAnomaly(lower+step*i, orbit.eccentricity);
-					v = Kepler.ComputeTrueAnomaly(E, orbit.eccentricity);
-					r = Kepler.ComputeRadius(orbit.semiLatusRectum, orbit.eccentricity, v);
+					r = Kepler.ComputeRadius(orbit.semiLatusRectum, orbit.eccentricity, lower + step*i);
 					if (orbit.transform.parent) {
-						line.SetPosition(i, orbit.orientation * orbit.transform.parent.TransformPoint(Kepler.ComputePosition(r, v)));
+						line.SetPosition(i, orbit.orientation * orbit.transform.parent.TransformPoint(Kepler.ComputePosition(r, lower + step*i)));
 					} else {
-						line.SetPosition(i, orbit.orientation * Kepler.ComputePosition(r, v));
+						line.SetPosition(i, orbit.orientation * Kepler.ComputePosition(r, lower + step*i));
 					}
 				}
 			}

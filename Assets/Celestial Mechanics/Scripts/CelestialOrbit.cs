@@ -241,18 +241,18 @@ namespace CelestialMechanics {
 			Vector3 periapsis = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, 0f), 0f);
 			Vector3 positionV = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, trueAnomaly), trueAnomaly);
 
+			//elliptical and circular
 			//build list of vectors for path
-			double step, lower;
-			double E, v, r;
-			
-			step = (_limits.y - _limits.x)*Deg2Rad/50;
-			lower = _limits.x*Deg2Rad;
+			double step, lower, upper;
+			double r;
+
+			lower = Kepler.ComputeTrueAnomaly(Kepler.ComputeEccentricAnomaly(_limits.x*Deg2Rad, _eccentricity), _eccentricity);
+			upper = Kepler.ComputeTrueAnomaly(Kepler.ComputeEccentricAnomaly(_limits.y*Deg2Rad, _eccentricity), _eccentricity);
+			step = (upper - lower)/50;
 			
 			for (int i = 0; i <= 50; i++) {
-				E = Kepler.ComputeEccentricAnomaly(lower+step*i, _eccentricity);
-				v = Kepler.ComputeTrueAnomaly(E, _eccentricity);
-				r = Kepler.ComputeRadius(semiLatusRectum, _eccentricity, v);
-				path[i] = Kepler.ComputePosition(r, v);
+				r = Kepler.ComputeRadius(semiLatusRectum, _eccentricity, lower + i*step);
+				path[i] = Kepler.ComputePosition(r, lower + i*step);
 			}
 
 			//Set the gizmos to draw in parent space

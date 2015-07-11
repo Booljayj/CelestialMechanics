@@ -116,12 +116,7 @@ namespace CelestialMechanics {
 
 			//only show limits and ending behaviour for open orbits
 			if (EditorGUILayout.BeginFadeGroup(openOrbit.faded)) {
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(limGUI_low, GUILayout.Width(30f));
-				EditorGUILayout.FloatField(limits.vector2Value.x);
-				EditorGUILayout.LabelField(limGUI_high, GUILayout.Width(30f));
-				EditorGUILayout.FloatField(limits.vector2Value.y);
-				EditorGUILayout.EndHorizontal();
+				EditorGUILayout.PropertyField(limits);
 				EditorGUILayout.PropertyField(ending, endGUI);
 			}
 			EditorGUILayout.EndFadeGroup();
