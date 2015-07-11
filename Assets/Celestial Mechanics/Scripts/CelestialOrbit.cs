@@ -10,7 +10,7 @@ namespace CelestialMechanics {
 
 		#region Fields
 		//input fields
-		[SerializeField] double _semiMajorAxis; //[m]
+		[SerializeField] double _semiMajorAxis = 1.0; //[m]
 		public double semiMajorAxis {
 			get {return _semiMajorAxis;}
 			set {
@@ -19,7 +19,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] double _eccentricity; //[1]
+		[SerializeField] double _eccentricity = 0.4; //[1]
 		public double eccentricity {
 			get {return _eccentricity;}
 			set {
@@ -28,7 +28,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _argument; //[degrees]
+		[SerializeField] float _argument = 0.0f; //[degrees]
 		public float argument {
 			get {return _argument;}
 			set {
@@ -37,7 +37,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _longitude; //[degrees]
+		[SerializeField] float _longitude = 0.0f; //[degrees]
 		public float longitude {
 			get {return _longitude;}
 			set {
@@ -46,7 +46,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _inclination; //[degrees]
+		[SerializeField] float _inclination = 0.0f; //[degrees]
 		public float inclination {
 			get {return _inclination;}
 			set {
@@ -56,7 +56,7 @@ namespace CelestialMechanics {
 		}
 
 		//control fields
-		[SerializeField] bool _simulate;
+		[SerializeField] bool _simulate = true;
 		public bool simulate {
 			get {return _simulate;}
 			set {
@@ -68,7 +68,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] Vector2 _limits; //[degrees]
+		[SerializeField] Vector2 _limits = new Vector2(-180,180); //[degrees]
 		public Vector2 limits {
 			get {return _limits;}
 			set {
@@ -77,12 +77,12 @@ namespace CelestialMechanics {
 			}
 		}
 
-		public WrapMode ending;
+		public WrapMode ending = WrapMode.Loop;
 
-		public double meanAnomaly; //[degrees]
+		public double meanAnomaly = 0.0; //[degrees]
 
 		//time fields
-		[SerializeField] double _period; //[seconds/orbit]
+		[SerializeField] double _period = 10.0; //[seconds/orbit]
 		public double period {
 			get {return _period;}
 			set {
@@ -91,14 +91,14 @@ namespace CelestialMechanics {
 			}
 		}
 
-		public double timeScale;
+		public double timeScale = 1.0;
 
-		public double startEpoch; //[seconds]
+		public double startEpoch = 0.0; //[seconds]
 
 		//events
-		public UnityEvent OnOrbitStart;
-		public OrbitEvent OnOrbitUpdate;
-		public UnityEvent OnOrbitEnd;
+		public UnityEvent OnOrbitStart = new UnityEvent();
+		public OrbitEvent OnOrbitUpdate = new OrbitEvent();
+		public UnityEvent OnOrbitEnd = new UnityEvent();
 		#endregion
 
 		#region Properties
@@ -132,6 +132,10 @@ namespace CelestialMechanics {
 			_period = 10;
 			timeScale = 1.0;
 			startEpoch = 0.0;
+
+			OnOrbitStart = new UnityEvent();
+			OnOrbitUpdate = new OrbitEvent();
+			OnOrbitEnd = new UnityEvent();
 		}
 
 		void Start() {

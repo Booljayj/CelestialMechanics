@@ -4,9 +4,9 @@ using System.Collections;
 namespace CelestialMechanics {
 	[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 	public class CelestialRings : MonoBehaviour {
-		[SerializeField] float innerRadius;
-		[SerializeField] float outerRadius;
-		[Range(3,50), SerializeField] int segments;
+		[SerializeField] float innerRadius = 1f;
+		[SerializeField] float outerRadius = 1.5f;
+		[Range(3,50), SerializeField] int segments = 10;
 
 		void Reset() {
 			innerRadius = 1f;

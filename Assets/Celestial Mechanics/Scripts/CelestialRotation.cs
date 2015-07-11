@@ -8,7 +8,7 @@ namespace CelestialMechanics {
 
 		#region Fields
 		//input fields
-		[SerializeField] float _rightAscension; //[deg]
+		[SerializeField] float _rightAscension = 0.0f; //[deg]
 		public float rightAscension {
 			get {return _rightAscension;}
 			set {
@@ -17,7 +17,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _declination; //[deg]
+		[SerializeField] float _declination = 0.0f; //[deg]
 		public float declination {
 			get {return _declination;}
 			set {
@@ -27,12 +27,12 @@ namespace CelestialMechanics {
 		}
 
 		//control fields
-		public bool simulate;
+		public bool simulate = true;
 
-		public float meanAngle; //[deg]
+		public float meanAngle = 0.0f; //[deg]
 
 		//time fields
-		[SerializeField] double _period; //[s]
+		[SerializeField] double _period = 10.0; //[s]
 		public double period {
 			get {return _period;}
 			set {
@@ -41,9 +41,9 @@ namespace CelestialMechanics {
 			}
 		}
 
-		public double timeScale;
+		public double timeScale = 1.0;
 
-		public double startEpoch; //[s]
+		public double startEpoch = 0.0; //[s]
 		#endregion
 
 		#region Properties
