@@ -10,7 +10,7 @@ namespace CelestialMechanics {
 
 		#region Fields
 		//input fields
-		[SerializeField] double _semiMajorAxis = 1.0; //[m]
+		[SerializeField] double _semiMajorAxis; //[m]
 		public double semiMajorAxis {
 			get {return _semiMajorAxis;}
 			set {
@@ -19,7 +19,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] double _eccentricity = 0.4; //[1]
+		[SerializeField] double _eccentricity; //[1]
 		public double eccentricity {
 			get {return _eccentricity;}
 			set {
@@ -28,7 +28,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _argument = 0.0f; //[degrees]
+		[SerializeField] float _argument; //[degrees]
 		public float argument {
 			get {return _argument;}
 			set {
@@ -37,7 +37,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _longitude = 0.0f; //[degrees]
+		[SerializeField] float _longitude; //[degrees]
 		public float longitude {
 			get {return _longitude;}
 			set {
@@ -46,7 +46,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] float _inclination = 0.0f; //[degrees]
+		[SerializeField] float _inclination; //[degrees]
 		public float inclination {
 			get {return _inclination;}
 			set {
@@ -56,7 +56,7 @@ namespace CelestialMechanics {
 		}
 
 		//control fields
-		[SerializeField] bool _simulate = true;
+		[SerializeField] bool _simulate;
 		public bool simulate {
 			get {return _simulate;}
 			set {
@@ -68,7 +68,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		[SerializeField] Vector2 _limits = new Vector2(-180,180); //[degrees]
+		[SerializeField] Vector2 _limits; //[degrees]
 		public Vector2 limits {
 			get {return _limits;}
 			set {
@@ -77,12 +77,12 @@ namespace CelestialMechanics {
 			}
 		}
 
-		public WrapMode ending = WrapMode.Loop;
+		public WrapMode ending;
 
-		public double meanAnomaly = 0.0; //[degrees]
+		public double meanAnomaly; //[degrees]
 
 		//time fields
-		[SerializeField] double _period = 10; //[seconds/orbit]
+		[SerializeField] double _period; //[seconds/orbit]
 		public double period {
 			get {return _period;}
 			set {
@@ -91,9 +91,9 @@ namespace CelestialMechanics {
 			}
 		}
 
-		public double timeScale = 1.0;
+		public double timeScale;
 
-		public double startEpoch = 0.0; //[seconds]
+		public double startEpoch; //[seconds]
 
 		//events
 		public UnityEvent OnOrbitStart;
@@ -117,6 +117,23 @@ namespace CelestialMechanics {
 		#endregion
 
 		#region Messages
+		void Reset() {
+			_semiMajorAxis = 1.0;
+			_eccentricity = 0.4;
+			_argument = 0.0f;
+			_longitude = 0.0f;
+			_inclination = 0.0f;
+
+			_simulate = true;
+			_limits = new Vector2(-180f, 180f);
+			ending = WrapMode.Loop;
+			meanAnomaly = 0.0;
+
+			_period = 10;
+			timeScale = 1.0;
+			startEpoch = 0.0;
+		}
+
 		void Start() {
 			ResetSimulation();
 			if (simulate) OnOrbitStart.Invoke();
