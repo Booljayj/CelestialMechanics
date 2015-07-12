@@ -142,7 +142,7 @@ namespace CelestialMechanics {
 		/// <param name="e">eccentricity [1]</param>
 		/// <returns>Velocity Vector</returns>
 		// TODO: support hyperbolic and parabolic orbits
-		public static Vector3 ComputeVelocity(double a, double r, double n, double E, double e) {
+		public static Vector3 ComputeVelocity(double a, double r, double n, double E, double v, double e) {
 			if (e == 0) {
 				//circular velocity
 				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
@@ -157,14 +157,12 @@ namespace CelestialMechanics {
 				return (float)((a*a*n)/r) * vel;
 			} else if (e == 1) {
 				//parabolic velocity
-				//TODO: MAKE IT RIGHT!!!!!
-				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
+				Vector3 vel = new Vector3((float)(-Math.Sin(v)/(Math.Cos(v)+1)),
 				                          0f,
-				                          (float)Math.Cos(E));
-				return (float)((a*a*n)/r) * vel;
+				                          1f);
+				return (float)Math.Sqrt(n*n*a*a*a*(2/r)) * vel.normalized;
 			} else {
 				//hyperbolic velocity
-				//TODO: Need a source to check the math on this
 				Vector3 vel = new Vector3((float)(-Math.Sinh(E)),
 				                          0,
 				                          (float)(Math.Sqrt(e*e-1)*Math.Cosh(E)));

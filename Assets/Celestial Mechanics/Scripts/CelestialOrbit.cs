@@ -178,7 +178,7 @@ namespace CelestialMechanics {
 			trueAnomaly = Kepler.ComputeTrueAnomaly(eccentricAnomaly, eccentricity);
 			radius = Kepler.ComputeRadius(semiLatusRectum, eccentricity, trueAnomaly);
 			position = orientation * Kepler.ComputePosition(radius, trueAnomaly);
-			velocity = orientation * Kepler.ComputeVelocity(_semiMajorAxis, radius, rate, eccentricAnomaly, eccentricity);
+			velocity = orientation * Kepler.ComputeVelocity(_semiMajorAxis, radius, rate, eccentricAnomaly, trueAnomaly, eccentricity);
 		}
 
 		//TODO: Define function for adding dV
