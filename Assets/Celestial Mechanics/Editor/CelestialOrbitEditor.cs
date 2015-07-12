@@ -54,12 +54,9 @@ namespace CelestialMechanics {
 		                                   "Range: 0 to Inf \n" +
 		                                   "Starting time of the simulation");
 		//orbital limits and end behavior
-		GUIContent limGUI_low = new GUIContent("Low",
-		                                       "Range: -Inf to Inf \n" +
-		                                       "Lower anomaly limit");
-		GUIContent limGUI_high = new GUIContent("High",
-		                                        "Range: -Inf to Inf \n" +
-		                                        "Upper anomaly limit");
+		GUIContent limGUI = new GUIContent("Limits",
+		                                   "Range: -Inf to Inf \n" +
+		                                   "Lower and Upper anomaly limits");
 		GUIContent endGUI = new GUIContent("Ending",
 		                                   "Behaviour when orbit reaches its limits");
 
@@ -116,7 +113,7 @@ namespace CelestialMechanics {
 
 			//only show limits and ending behaviour for open orbits
 			if (EditorGUILayout.BeginFadeGroup(openOrbit.faded)) {
-				EditorGUILayout.PropertyField(limits);
+				EditorGUILayout.PropertyField(limits, limGUI);
 				EditorGUILayout.PropertyField(ending, endGUI);
 			}
 			EditorGUILayout.EndFadeGroup();
