@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace CelestialMechanics {
 	public class CelestialOrbit : MonoBehaviour, ISimulation {
+		const double Tau = Math.PI*2.0;
 		const double Deg2Rad = Math.PI/180.0;
 
 		#region Fields
@@ -68,6 +69,8 @@ namespace CelestialMechanics {
 			}
 		}
 
+		public double startEpoch = 0.0; //[seconds]
+
 		[SerializeField] Vector2 _limits = new Vector2(-180,180); //[degrees]
 		public Vector2 limits {
 			get {return _limits;}
@@ -77,7 +80,7 @@ namespace CelestialMechanics {
 			}
 		}
 
-		public WrapMode ending = WrapMode.Loop;
+		//public WrapMode ending = WrapMode.Loop;
 
 		public double meanAnomaly = 0.0; //[degrees]
 
@@ -92,8 +95,6 @@ namespace CelestialMechanics {
 		}
 
 		public double timeScale = 1.0;
-
-		public double startEpoch = 0.0; //[seconds]
 
 		//events
 		public UnityEvent OnOrbitStart = new UnityEvent();
@@ -126,7 +127,6 @@ namespace CelestialMechanics {
 
 			_simulate = true;
 			_limits = new Vector2(-180f, 180f);
-			ending = WrapMode.Loop;
 			meanAnomaly = 0.0;
 
 			_period = 10;
@@ -155,8 +155,8 @@ namespace CelestialMechanics {
 		}
 
 		void OnValidate() {
-			if (_eccentricity < 0) _eccentricity *= -1.0;
-			if (_semiMajorAxis < 0) _semiMajorAxis *= -1.0;
+			if (_eccentricity < 0) _eccentricity = 0.0;
+			if (_semiMajorAxis < 0) _semiMajorAxis = 0.0;
 
 			Start();
 			OnEnable();
@@ -180,38 +180,6 @@ namespace CelestialMechanics {
 			position = orientation * Kepler.ComputePosition(radius, trueAnomaly);
 			velocity = orientation * Kepler.ComputeVelocity(_semiMajorAxis, radius, rate, eccentricAnomaly, trueAnomaly, eccentricity);
 		}
-
-		//TODO: Define function for adding dV
-		//requires dynamic properties to be set up in ComputeProperties for initial conditions
-		//not strictly necessary, but would greatly help when integrating physics
-		public void AddVelocity(Vector3 dV) {
-			throw new NotImplementedException("Cannot add delta-v to an orbit yet");
-		}
-
-		void WrapAnomaly() {
-			if (anomaly < _limits.x*Deg2Rad || anomaly > _limits.y*Deg2Rad) {
-				switch (ending) {
-				case WrapMode.Clamp:
-					simulate = false;
-					ResetSimulation();
-					break;
-				case WrapMode.ClampForever:
-					gameObject.SetActive(false);
-					ResetSimulation();
-					break;
-				case WrapMode.PingPong:
-					if (anomaly < _limits.x*Deg2Rad) {
-						anomaly = 2*_limits.x*Deg2Rad - anomaly;
-					} else {
-						anomaly = 2*_limits.y*Deg2Rad - anomaly;
-					}
-					timeScale *= -1.0;
-					break;
-				}
-
-				anomaly = Kepler.WrapAngle(anomaly, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
-			}
-		}
 		#endregion
 
 		#region Simulation
@@ -219,12 +187,32 @@ namespace CelestialMechanics {
 		public void StopSimulation() {simulate = false;}
 
 		public void ResetSimulation() {
-			anomaly = Kepler.WrapAngle(meanAnomaly*Deg2Rad + startEpoch * rate, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
+			if (_eccentricity < 1) { //closed orbit
+				anomaly = meanAnomaly*Deg2Rad + startEpoch * rate;
+				anomaly = ((anomaly % Tau) + Tau) % Tau; //wraps to [0, Tau]
+
+			} else { //open orbit
+				anomaly = meanAnomaly*Deg2Rad;
+			}
 		}
 
 		public void UpdateSimulation() {
 			anomaly += Time.deltaTime * rate * timeScale;
-			WrapAnomaly();
+
+			if (_eccentricity < 1) { //closed orbit
+				if (anomaly > Tau) {
+					anomaly = anomaly % Tau;
+				} else if (anomaly < 0) {
+					anomaly = (anomaly % Tau) + Tau;
+				}
+
+			} else { //open orbit
+				if (anomaly > _limits.y*Deg2Rad) {
+					anomaly = _limits.y*Deg2Rad;
+					simulate = false; //bounds reached on open orbit
+				}
+			}
+
 			ComputeDynamicProperties(anomaly);
 			transform.localPosition = position;
 

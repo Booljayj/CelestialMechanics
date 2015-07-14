@@ -29,7 +29,6 @@ namespace CelestialMechanics {
 				orbit.period = Random.Range(periodRange.x, periodRange.y);
 
 				orbit.limits = new Vector2(-360, 360);
-				orbit.ending = WrapMode.ClampForever;
 				orbit.meanAnomaly = -360f;
 
 				orbit.longitude = Random.Range(-180, 180);
@@ -39,6 +38,9 @@ namespace CelestialMechanics {
 				orbit.ResetSimulation();
 
 				comet.SetActive(true);
+
+				DestroyOnDisable destroy = comet.AddComponent<DestroyOnDisable>();
+				orbit.OnOrbitEnd.AddListener(destroy.OnDisable);
 
 				yield return new WaitForSeconds(rate);
 			}
