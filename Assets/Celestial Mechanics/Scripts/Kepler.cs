@@ -49,15 +49,15 @@ namespace CelestialMechanics {
 		/// <param name="a">semi major axis [m]</param>
 		/// <param name="e">eccentricity [1]</param>
 		/// <returns>Semi-Latus Rectum [m]</returns>
-		public static double ComputeSemiLatusRectum(double a, double e) {
-			if (e > 0.0f && e < 1.0f) {
-				return a*(1.0-e*e);
-			} else if (e == 1.0f) {
-				return a*2.0;
-			} else if (e > 1.0) {
-				return a*(e*e-1.0);
-			} else {
-				return a;
+		public static double ComputeSemiLatusRectum(double p, double e) {
+			if (e == 0.0) {			//circular
+				return p;
+			} else if (e == 1.0) {	//parabolic
+				return p*2.0;
+			} else if (e < 1.0) {	//elliptical
+				return p*(1.0-e*e)/(1.0-e);
+			} else {				//hyperbolic
+				return p*(e*e-1.0)/(e-1.0);
 			}
 		}
 
@@ -81,15 +81,15 @@ namespace CelestialMechanics {
 		public static double ComputeEccentricAnomaly(double M, double e) {
 			if (e < 0.0)
 				throw new ArgumentOutOfRangeException("eccentricity", "cannot be negative");
-
-			if (e > 0.0 && e < 1.0) {
-				return NewtonElliptical(M, e);
-			} else if (e == 1.0) {
-				return NewtonParabolic(M, e);
-			} else if (e > 1.0) {
-				return NewtonHyperbolic(M, e);
-			} else {
+			
+			if (e == 0.0) {			//circular
 				return M;
+			} else if (e == 1.0) {	//parabolic
+				return NewtonParabolic(M, e);
+			} else if (e < 1.0) {	//elliptical
+				return NewtonElliptical(M, e);
+			} else {				//hyperbolic
+				return NewtonHyperbolic(M, e);
 			}
 		}
 
@@ -104,14 +104,14 @@ namespace CelestialMechanics {
 			if (e < 0.0)
 				throw new ArgumentOutOfRangeException("eccentricity", "cannot be negative");
 
-			if (e > 0.0 && e < 1.0) {
-				return 2.0f*Math.Atan2(Math.Sqrt(1.0+e)*Math.Sin(E/2.0), Math.Sqrt(1.0-e)*Math.Cos(E/2.0));
-			} else if (e == 1.0) {
-				return 2.0*Math.Atan(E);
-			} else if (e > 1.0) {
-				return 2.0*Math.Atan2(Math.Sqrt(e+1.0)*Math.Sinh(E/2.0), Math.Sqrt(e-1.0)*Math.Cosh(E/2.0));
-			} else {
+			if (e == 0.0) {			//circular
 				return E;
+			} else if (e == 1.0) {	//parabolic
+				return 2.0*Math.Atan(E);
+			} else if (e < 1.0) {	//elliptical
+				return 2.0*Math.Atan2(Math.Sqrt(1.0+e)*Math.Sin(E/2.0), Math.Sqrt(1.0-e)*Math.Cos(E/2.0));
+			} else {				//hyperbolic
+				return 2.0*Math.Atan2(Math.Sqrt(e+1.0)*Math.Sinh(E/2.0), Math.Sqrt(e-1.0)*Math.Cosh(E/2.0));
 			}
 		}
 
@@ -130,8 +130,8 @@ namespace CelestialMechanics {
 		/// <returns>Postion Vector</returns>
 		public static Vector3 ComputePosition(double r, double v) {
 			return new Vector3((float)(r*Math.Cos(v)),
-								0f,
-								(float)(r*Math.Sin(v)));
+			                   0f,
+			                   (float)(r*Math.Sin(v)));
 		}
 
 		/// <summary>Compute the velocity of the body within the orbital plane</summary>
@@ -143,25 +143,25 @@ namespace CelestialMechanics {
 		/// <returns>Velocity Vector</returns>
 		// TODO: support hyperbolic and parabolic orbits
 		public static Vector3 ComputeVelocity(double a, double r, double n, double E, double v, double e) {
-			if (e == 0) { //circular velocity
+			if (e == 0.0) {			//circular velocity
 				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
 				                          0f,
 				                          (float)(Math.Cos(E)));
 				return (float)(a * n) * vel;
 
-			} else if (e < 1) { //elliptical velocity
+			} else if (e == 1.0) {	//parabolic velocity
+				Vector3 vel = new Vector3((float)(-Math.Sin(v)/(Math.Cos(v)+1)),
+				                          0f,
+				                          1f);
+				return (float)Math.Sqrt(n*n*a*a*a*(2/r)) * vel.normalized;
+				
+			} else if (e < 1.0) {	//elliptical velocity
 				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
 			    	                      0f,
 			        	                  (float)(Math.Sqrt(1-e*e)*Math.Cos(E)));
 				return (float)((a*a*n)/r) * vel;
 
-			} else if (e == 1) { //parabolic velocity
-				Vector3 vel = new Vector3((float)(-Math.Sin(v)/(Math.Cos(v)+1)),
-				                          0f,
-				                          1f);
-				return (float)Math.Sqrt(n*n*a*a*a*(2/r)) * vel.normalized;
-
-			} else { //hyperbolic velocity
+			} else {				//hyperbolic velocity
 				Vector3 vel = new Vector3((float)(-Math.Sinh(E)),
 				                          0,
 				                          (float)(Math.Sqrt(e*e-1)*Math.Cosh(E)));

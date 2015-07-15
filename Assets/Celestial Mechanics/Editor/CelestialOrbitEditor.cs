@@ -19,15 +19,12 @@ namespace CelestialMechanics {
 		GUIContent aGUI_circle = new GUIContent("Radius",
 			"Range: 0 to Inf \n" +
 			"The distance from the focus of the orbit");
-		GUIContent aGUI_ellipse = new GUIContent("Semi-Major Axis",
+		GUIContent aGUI_ellipse = new GUIContent("Periapsis",
 			"Range: 0 to Inf \n" +
-			"The longest radius of the ellipse");
-		GUIContent aGUI_parabolic = new GUIContent("Focal Length",
+			"The distance to the closest point of the ellipse");
+		GUIContent aGUI_open = new GUIContent("Focal Length",
 			"Range: 0 to Inf \n" +
 			"The distance between the focus and the vertex");
-		GUIContent aGUI_hyperbolic = new GUIContent("Semi-Major Axis",
-			"Range: 0 to Inf \n" +
-			"The adjusted distance between the focus and vertex");
 		//orientation
 		GUIContent argGUI = new GUIContent("Argument",
 			"Range: -180 to 180 \n" +
@@ -98,14 +95,12 @@ namespace CelestialMechanics {
 			}
 
 			//show the appropriate a-value GUI for the chosen eccentricity
-			if (e.doubleValue == 1.0) {
-				EditorGUILayout.PropertyField(a, aGUI_parabolic);
-			} else if (e.doubleValue > 1.0) {
-				EditorGUILayout.PropertyField(a, aGUI_hyperbolic);
-			} else if (e.doubleValue < 1.0) {
+			if (e.doubleValue == 0.0) {			//circular
 				EditorGUILayout.PropertyField(a, aGUI_circle);
-			} else {
+			} else if (e.doubleValue < 1.0) {	//elliptical
 				EditorGUILayout.PropertyField(a, aGUI_ellipse);
+			} else {							//hyperbolic && parabolic
+				EditorGUILayout.PropertyField(a, aGUI_open);
 			}
 
 			//show orientation sliders
