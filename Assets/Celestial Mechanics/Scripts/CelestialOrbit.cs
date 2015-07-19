@@ -226,7 +226,7 @@ namespace CelestialMechanics {
 
 			//variables required
 			Vector3[] path = new Vector3[51];
-			Vector3 periapsis = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, 0f), 0f);
+			Vector3 periapsisV = orientation * Vector3.right * (float)_semiMajorAxis;
 			Vector3 positionV = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, trueAnomaly), trueAnomaly);
 
 			//elliptical and circular
@@ -253,7 +253,7 @@ namespace CelestialMechanics {
 			}
 
 			//draw periapsis vector
-			Gizmos.DrawLine(Vector3.zero, periapsis);
+			Gizmos.DrawLine(Vector3.zero, periapsisV);
 
 			//draw position vector
 			Gizmos.color = Color.blue;
