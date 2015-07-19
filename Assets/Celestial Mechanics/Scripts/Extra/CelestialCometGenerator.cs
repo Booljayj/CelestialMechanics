@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 namespace CelestialMechanics {
@@ -25,7 +25,7 @@ namespace CelestialMechanics {
 				comet.transform.localScale = Vector3.one * Random.Range(sizeRange.x, sizeRange.y);
 
 				orbit.eccentricity = Random.Range(eccentricityRange.x, eccentricityRange.y);
-				orbit.semiMajorAxis = Random.Range(semiMajorAxisRange.x, semiMajorAxisRange.y);
+				orbit.periapsis = Random.Range(semiMajorAxisRange.x, semiMajorAxisRange.y);
 				orbit.period = Random.Range(periodRange.x, periodRange.y);
 
 				orbit.limits = new Vector2(-360, 360);

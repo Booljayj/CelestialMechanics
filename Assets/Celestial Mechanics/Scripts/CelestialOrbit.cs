@@ -11,12 +11,12 @@ namespace CelestialMechanics {
 
 		#region Fields
 		//input fields
-		[SerializeField] double _semiMajorAxis = 1.0; //[m]
-		public double semiMajorAxis {
-			get {return _semiMajorAxis;}
+		[SerializeField] double _periapsis = 1.0; //[m]
+		public double periapsis {
+			get {return _periapsis;}
 			set {
-				_semiMajorAxis = value;
-				semiLatusRectum = Kepler.ComputeSemiLatusRectum(_semiMajorAxis, _eccentricity);
+				_periapsis = value;
+				semiLatusRectum = Kepler.ComputeSemiLatusRectum(_periapsis, _eccentricity);
 			}
 		}
 
@@ -25,7 +25,7 @@ namespace CelestialMechanics {
 			get {return _eccentricity;}
 			set {
 				_eccentricity = value;
-				semiLatusRectum = Kepler.ComputeSemiLatusRectum(_semiMajorAxis, _eccentricity);
+				semiLatusRectum = Kepler.ComputeSemiLatusRectum(_periapsis, _eccentricity);
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace CelestialMechanics {
 
 		#region Messages
 		void Reset() {
-			_semiMajorAxis = 1.0;
+			_periapsis = 1.0;
 			_eccentricity = 0.4;
 			_argument = 0.0f;
 			_longitude = 0.0f;
@@ -156,7 +156,7 @@ namespace CelestialMechanics {
 
 		void OnValidate() {
 			if (_eccentricity < 0) _eccentricity = 0.0;
-			if (_semiMajorAxis < 0) _semiMajorAxis = 0.0;
+			if (_periapsis < 0) _periapsis = 0.0;
 
 			Start();
 			OnEnable();
@@ -167,7 +167,7 @@ namespace CelestialMechanics {
 		/// <summary>Compute static properties for orbit shape and speed</summary>
 		public void ComputeStaticProperties() {
 			orientation = Kepler.ComputeOrientation(argument, longitude, inclination);
-			semiLatusRectum = Kepler.ComputeSemiLatusRectum(semiMajorAxis, eccentricity);
+			semiLatusRectum = Kepler.ComputeSemiLatusRectum(periapsis, eccentricity);
 			rate = Kepler.ComputeRate(period, limits.x*Deg2Rad, limits.y*Deg2Rad);
 		}
 
@@ -178,7 +178,7 @@ namespace CelestialMechanics {
 			trueAnomaly = Kepler.ComputeTrueAnomaly(eccentricAnomaly, eccentricity);
 			radius = Kepler.ComputeRadius(semiLatusRectum, eccentricity, trueAnomaly);
 			position = orientation * Kepler.ComputePosition(radius, trueAnomaly);
-			velocity = orientation * Kepler.ComputeVelocity(_semiMajorAxis, radius, rate, eccentricAnomaly, trueAnomaly, eccentricity);
+			velocity = orientation * Kepler.ComputeVelocity(_periapsis, radius, rate, eccentricAnomaly, trueAnomaly, eccentricity);
 		}
 		#endregion
 
@@ -226,7 +226,7 @@ namespace CelestialMechanics {
 
 			//variables required
 			Vector3[] path = new Vector3[51];
-			Vector3 periapsisV = orientation * Vector3.right * (float)_semiMajorAxis;
+			Vector3 periapsisV = orientation * Vector3.right * (float)_periapsis;
 			Vector3 positionV = orientation*Kepler.ComputePosition(Kepler.ComputeRadius(semiLatusRectum, _eccentricity, trueAnomaly), trueAnomaly);
 
 			//elliptical and circular

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 
@@ -17,7 +17,7 @@ namespace CelestialMechanics {
 		void Awake() {
 			orbit = GetComponent<CelestialOrbit>();
 
-			semiMajorAxisOriginal = orbit.semiMajorAxis;
+			semiMajorAxisOriginal = orbit.periapsis;
 			argumentOriginal = orbit.argument;
 			periodOriginal = orbit.period;
 		}
@@ -30,16 +30,16 @@ namespace CelestialMechanics {
 		public void StopSimulation() {orbit.simulate = false;}
 
 		public void ResetSimulation() {
-			orbit.semiMajorAxis = semiMajorAxisOriginal;
+			orbit.periapsis = semiMajorAxisOriginal;
 			orbit.argument = argumentOriginal;
 			orbit.period = periodOriginal;
 		}
 
 		public void UpdateSimulation() {
 			if (orbitDecay != 0) {
-				orbit.semiMajorAxis += orbitDecay * Time.deltaTime * orbit.timeScale;
+				orbit.periapsis += orbitDecay * Time.deltaTime * orbit.timeScale;
 
-				if (orbit.semiMajorAxis <= 0) {
+				if (orbit.periapsis <= 0) {
 					//behaviour beyond this point is undefined, best not upset the Kraken
 					ResetSimulation();
 					StopSimulation();
@@ -47,7 +47,7 @@ namespace CelestialMechanics {
 
 				} else {
 					orbit.period = Math.Sqrt( (periodOriginal*periodOriginal) *
-					                          (orbit.semiMajorAxis*orbit.semiMajorAxis*orbit.semiMajorAxis) /
+					                          (orbit.periapsis*orbit.periapsis*orbit.periapsis) /
 					                          (semiMajorAxisOriginal*semiMajorAxisOriginal*semiMajorAxisOriginal) );
 				}
 			}

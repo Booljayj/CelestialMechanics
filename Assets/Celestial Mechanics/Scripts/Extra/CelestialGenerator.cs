@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using Random = UnityEngine.Random;
@@ -83,8 +83,8 @@ namespace CelestialMechanics {
 
 			//add an orbit component, and fill it out
 			CelestialOrbit orbit = orbitObj.AddComponent<CelestialOrbit>();
-			orbit.semiMajorAxis = Random.Range(distanceRange.x, distanceRange.y);
-			orbit.period = 2*Math.PI*Math.Sqrt(orbit.semiMajorAxis*orbit.semiMajorAxis*orbit.semiMajorAxis/gravitationParameter);
+			orbit.periapsis = Random.Range(distanceRange.x, distanceRange.y);
+			orbit.period = 2*Math.PI*Math.Sqrt(orbit.periapsis*orbit.periapsis*orbit.periapsis/gravitationParameter);
 			orbit.eccentricity = Random.Range(eccentricityRange.x, eccentricityRange.y);
 			orbit.inclination = Random.Range(inclinationRange.x, inclinationRange.y);
 			orbit.longitude = Random.Range(longitudeRange.x, longitudeRange.y);
