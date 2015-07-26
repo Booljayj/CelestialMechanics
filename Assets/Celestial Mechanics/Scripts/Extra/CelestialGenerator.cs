@@ -70,10 +70,10 @@ namespace CelestialMechanics {
 				             cometDistanceRange,
 				             cometSizeRange);
 			}
-			
+
+			watch.Stop();
 			Debug.Log(string.Format("Generated {0} planets, {1} moons, and {2} comets in {3}ms",
 			          planets, moonsTotal, comets, watch.ElapsedMilliseconds));
-			watch.Stop();
 		}
 
 		GameObject GenerateBody(GameObject parent, string name, Color color, Vector2 eccentricityRange, Vector2 distanceRange, Vector2 sizeRange) {
@@ -84,12 +84,12 @@ namespace CelestialMechanics {
 			//add an orbit component, and fill it out
 			CelestialOrbit orbit = orbitObj.AddComponent<CelestialOrbit>();
 			orbit.periapsis = Random.Range(distanceRange.x, distanceRange.y);
-			orbit.period = 2*Math.PI*Math.Sqrt(orbit.periapsis*orbit.periapsis*orbit.periapsis/gravitationParameter);
 			orbit.eccentricity = Random.Range(eccentricityRange.x, eccentricityRange.y);
 			orbit.inclination = Random.Range(inclinationRange.x, inclinationRange.y);
 			orbit.longitude = Random.Range(longitudeRange.x, longitudeRange.y);
 			orbit.argument = Random.Range(argumentRange.x, argumentRange.y);
 			orbit.meanAnomaly = Random.Range(-180f, 180f);
+			orbit.period = 2*Math.PI*Math.Sqrt(orbit.semiMajorAxis*orbit.semiMajorAxis*orbit.semiMajorAxis/gravitationParameter);
 			orbit.ComputeStaticProperties();
 
 			//create the model for the body

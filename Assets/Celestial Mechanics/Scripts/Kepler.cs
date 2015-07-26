@@ -46,7 +46,7 @@ namespace CelestialMechanics {
 		}
 
 		/// <summary>Compute the semi-latus rectum of the conic section</summary>
-		/// <param name="a">semi major axis [m]</param>
+		/// <param name="a">periapsis [m]</param>
 		/// <param name="e">eccentricity [1]</param>
 		/// <returns>Semi-Latus Rectum [m]</returns>
 		public static double ComputeSemiLatusRectum(double p, double e) {
@@ -58,6 +58,24 @@ namespace CelestialMechanics {
 				return p*(1.0-e*e)/(1.0-e);
 			} else {				//hyperbolic
 				return p*(e*e-1.0)/(e-1.0);
+			}
+		}
+
+		/// <summary>
+		/// Computes the semi major axis of the conic section
+		/// </summary>
+		/// <param name="p">periapsis [m]</param>
+		/// <param name="e">eccentricity [1]</param>
+		/// <returns>Semi-major axis [m]</returns>
+		public static double ComputeSemiMajorAxis(double p, double e) {
+			if (e == 0.0) {			//circular
+				return p;
+			} else if (e == 1.0) {	//parabolic
+				return double.PositiveInfinity;
+			} else if (e < 1.0) {	//elliptical
+				return p/(1-e);
+			} else {				//hyperbolic
+				return -p/(e-1);
 			}
 		}
 

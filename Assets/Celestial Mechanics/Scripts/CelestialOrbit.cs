@@ -106,6 +106,7 @@ namespace CelestialMechanics {
 		//static properties
 		public Quaternion orientation {get; private set;}
 		public double semiLatusRectum {get; private set;} //[m]
+		public double semiMajorAxis {get; private set;} //[m]
 		public double rate {get; private set;} //[rad/second]
 
 		//dynamic properties
@@ -168,6 +169,7 @@ namespace CelestialMechanics {
 		public void ComputeStaticProperties() {
 			orientation = Kepler.ComputeOrientation(argument, longitude, inclination);
 			semiLatusRectum = Kepler.ComputeSemiLatusRectum(periapsis, eccentricity);
+			semiMajorAxis = Kepler.ComputeSemiMajorAxis(_periapsis, _eccentricity);
 			rate = Kepler.ComputeRate(period, limits.x*Deg2Rad, limits.y*Deg2Rad);
 		}
 
