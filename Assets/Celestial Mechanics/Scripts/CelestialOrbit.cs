@@ -168,19 +168,19 @@ namespace CelestialMechanics {
 		/// <summary>Compute static properties for orbit shape and speed</summary>
 		public void ComputeStaticProperties() {
 			orientation = Kepler.ComputeOrientation(argument, longitude, inclination);
-			semiLatusRectum = Kepler.ComputeSemiLatusRectum(periapsis, eccentricity);
+			semiLatusRectum = Kepler.ComputeSemiLatusRectum(_periapsis, _eccentricity);
 			semiMajorAxis = Kepler.ComputeSemiMajorAxis(_periapsis, _eccentricity);
-			rate = Kepler.ComputeRate(period, limits.x*Deg2Rad, limits.y*Deg2Rad);
+			rate = Kepler.ComputeRate(_period, _limits.x*Deg2Rad, _limits.y*Deg2Rad);
 		}
 
 		/// <summary>Compute dynamic properties that change over the anomaly</summary>
 		/// <param name="M">The anomaly to evaluate properties at</param>
 		public void ComputeDynamicProperties(double M) {
-			eccentricAnomaly = Kepler.ComputeEccentricAnomaly(M, eccentricity);
-			trueAnomaly = Kepler.ComputeTrueAnomaly(eccentricAnomaly, eccentricity);
-			radius = Kepler.ComputeRadius(semiLatusRectum, eccentricity, trueAnomaly);
+			eccentricAnomaly = Kepler.ComputeEccentricAnomaly(M, _eccentricity);
+			trueAnomaly = Kepler.ComputeTrueAnomaly(eccentricAnomaly, _eccentricity);
+			radius = Kepler.ComputeRadius(semiLatusRectum, _eccentricity, trueAnomaly);
 			position = orientation * Kepler.ComputePosition(radius, trueAnomaly);
-			velocity = orientation * Kepler.ComputeVelocity(_periapsis, radius, rate, eccentricAnomaly, trueAnomaly, eccentricity);
+			velocity = orientation * Kepler.ComputeVelocity(_periapsis, radius, rate, eccentricAnomaly, trueAnomaly, _eccentricity);
 		}
 		#endregion
 
