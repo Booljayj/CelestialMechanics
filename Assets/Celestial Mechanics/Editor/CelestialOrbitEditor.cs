@@ -60,7 +60,7 @@ namespace CelestialMechanics {
 
 		void OnEnable() {
 			e = serializedObject.FindProperty("_eccentricity");
-			a = serializedObject.FindProperty("_semiMajorAxis");
+			a = serializedObject.FindProperty("_periapsis");
 			argument = serializedObject.FindProperty("_argument");
 			longitude = serializedObject.FindProperty("_longitude");
 			inclination = serializedObject.FindProperty("_inclination");
