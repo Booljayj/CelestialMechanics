@@ -89,8 +89,8 @@ namespace CelestialMechanics {
 			orbit.longitude = Random.Range(longitudeRange.x, longitudeRange.y);
 			orbit.argument = Random.Range(argumentRange.x, argumentRange.y);
 			orbit.meanAnomaly = Random.Range(-180f, 180f);
+			orbit.ComputeStaticProperties(); //need to do this so that semi major axis is available
 			orbit.period = 2*Math.PI*Math.Sqrt(orbit.semiMajorAxis*orbit.semiMajorAxis*orbit.semiMajorAxis/gravitationParameter);
-			orbit.ComputeStaticProperties();
 
 			//create the model for the body
 			GameObject planetObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
