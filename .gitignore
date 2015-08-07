@@ -29,3 +29,7 @@ sysinfo.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Large Binary files
+*.mov
+*.mpg
