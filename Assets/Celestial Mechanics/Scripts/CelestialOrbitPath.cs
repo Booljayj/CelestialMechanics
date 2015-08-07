@@ -26,6 +26,8 @@ namespace CelestialMechanics {
 
 			} else {
 				double step, lower, upper, r;
+				Matrix4x4 matrix = (transform.parent)? transform.parent.localToWorldMatrix : Matrix4x4.identity;
+
 				line.SetVertexCount(segments+1);
 
 				upper = Kepler.ComputeTrueAnomaly(Kepler.ComputeEccentricAnomaly(orbit.limits.x*Deg2Rad, orbit.eccentricity), orbit.eccentricity);
@@ -34,11 +36,7 @@ namespace CelestialMechanics {
 
 				for (int i = 0; i < segments+1; i++) {
 					r = Kepler.ComputeRadius(orbit.semiLatusRectum, orbit.eccentricity, lower + step*i);
-					if (orbit.transform.parent) {
-						line.SetPosition(i, orbit.orientation * orbit.transform.parent.TransformPoint(Kepler.ComputePosition(r, lower + step*i)));
-					} else {
-						line.SetPosition(i, orbit.orientation * Kepler.ComputePosition(r, lower + step*i));
-					}
+					line.SetPosition(i, matrix.MultiplyPoint(orbit.orientation * Kepler.ComputePosition(r, lower + step*i)));
 				}
 			}
 		}
