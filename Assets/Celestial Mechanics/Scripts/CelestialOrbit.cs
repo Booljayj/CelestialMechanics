@@ -137,6 +137,8 @@ namespace CelestialMechanics {
 			OnOrbitStart = new UnityEvent();
 			OnOrbitUpdate = new OrbitEvent();
 			OnOrbitEnd = new UnityEvent();
+
+			OnEnable();
 		}
 
 		void Start() {
