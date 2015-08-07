@@ -128,7 +128,6 @@ namespace CelestialMechanics {
 			EditorGUILayout.Slider(M0, limits.vector2Value.x, limits.vector2Value.y, M0GUI);
 			EditorGUILayout.PropertyField(T, TGUI);
 			EditorGUILayout.PropertyField(tscale, tscGUI);
-			EditorGUILayout.PropertyField(epoch, epoGUI);
 
 			EditorGUILayout.PropertyField(start);
 			EditorGUILayout.PropertyField(update);
