@@ -53,8 +53,8 @@ namespace CelestialMechanics {
 			EditorGUILayout.PropertyField(sim, simGUI);
 			EditorGUILayout.Slider(a0, 0f, 360f, a0GUI);
 			EditorGUILayout.PropertyField(T, TGUI);
-			EditorGUILayout.PropertyField(tscale, tscGUI);
 			EditorGUILayout.PropertyField(epoch, epoGUI);
+			EditorGUILayout.PropertyField(tscale, tscGUI);
 
 			serializedObject.ApplyModifiedProperties();
 

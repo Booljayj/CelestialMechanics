@@ -113,6 +113,9 @@ namespace CelestialMechanics {
 			EditorGUILayout.LabelField("Control", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(sim, simGUI);
 
+			//show time and starting position controls
+			EditorGUILayout.Slider(M0, limits.vector2Value.x, limits.vector2Value.y, M0GUI);
+			EditorGUILayout.PropertyField(T, TGUI);
 			//only show epoch for closed orbits
 			if (EditorGUILayout.BeginFadeGroup(closedOrbit.faded)) {
 				EditorGUILayout.PropertyField(epoch, epoGUI);
@@ -123,10 +126,6 @@ namespace CelestialMechanics {
 				EditorGUILayout.PropertyField(limits, limGUI);
 			}
 			EditorGUILayout.EndFadeGroup();
-
-			//show time and starting position controls
-			EditorGUILayout.Slider(M0, limits.vector2Value.x, limits.vector2Value.y, M0GUI);
-			EditorGUILayout.PropertyField(T, TGUI);
 			EditorGUILayout.PropertyField(tscale, tscGUI);
 
 			EditorGUILayout.PropertyField(start);
