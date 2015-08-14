@@ -44,7 +44,6 @@ namespace CelestialMechanics {
 		public override void OnInspectorGUI() {
 			serializedObject.Update();
 
-			EditorGUILayout.LabelField("Input", EditorStyles.boldLabel);
 			EditorGUILayout.Slider(rightAscension, 0f, 360f, raGUI);
 			EditorGUILayout.Slider(declination, 0f, 360f, decGUI);
 				EditorGUILayout.Space();
