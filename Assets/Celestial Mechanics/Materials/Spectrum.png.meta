@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: f1812fe19c5c44065af4c1636cf35f00
+labels:
+- CMToolkit
 timeCreated: 1432187881
 licenseType: Free
 TextureImporter:

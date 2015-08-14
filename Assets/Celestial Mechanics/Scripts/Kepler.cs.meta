@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 436e92cf1852a4e19b8e17045e38b980
+labels:
+- CMToolkit
 timeCreated: 1426440679
 licenseType: Free
 MonoImporter:
