@@ -42,7 +42,7 @@ namespace CelestialMechanics {
 		/// <param name="i">inclination [degrees]</param>
 		/// <returns>Orbital Plane Orientation</returns>
 		public static Quaternion ComputeOrientation(float o, float w, float i) {
-			return Quaternion.Euler(i, w, 0f)*Quaternion.Euler(0f, o, 0f);
+			return Quaternion.Euler(i, -w, 0f)*Quaternion.Euler(0f, -o, 0f);
 		}
 
 		/// <summary>Compute the semi-latus rectum of the conic section</summary>
@@ -99,7 +99,7 @@ namespace CelestialMechanics {
 		public static double ComputeEccentricAnomaly(double M, double e) {
 			if (e < 0.0)
 				throw new ArgumentOutOfRangeException("eccentricity", "cannot be negative");
-			
+
 			if (e == 0.0) {			//circular
 				return M;
 			} else if (e == 1.0) {	//parabolic
@@ -172,7 +172,7 @@ namespace CelestialMechanics {
 				                          0f,
 				                          1f);
 				return (float)Math.Sqrt(n*n*a*a*a*(2/r)) * vel.normalized;
-				
+
 			} else if (e < 1.0) {	//elliptical velocity
 				Vector3 vel = new Vector3((float)(-Math.Sin(E)),
 			    	                      0f,
@@ -204,7 +204,7 @@ namespace CelestialMechanics {
 		}
 		#endregion
 
-		#region Newton 
+		#region Newton
 		// M = E - e*sin(E)
 		// f(E) = E - e*sin(E) - M
 		// df/dE = 1 - e*cos(E)
@@ -244,7 +244,7 @@ namespace CelestialMechanics {
 				"Consider using eccentricity values that are farther from 1 or anomaly values closer to 0",
 				e.ToString(), M.ToString()));
 		}
-				
+
 		// M = e*sinh(E) - E
 		// f(E) = e*sinh(E) - E - M
 		// df/dE = e*cosh(E) - 1
