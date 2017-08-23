@@ -46,9 +46,11 @@ namespace CelestialMechanics {
 					orbit.StopSimulation();
 
 				} else {
-					orbit.period = Math.Sqrt( (periodOriginal*periodOriginal) *
-					                          (orbit.periapsis*orbit.periapsis*orbit.periapsis) /
-					                          (semiMajorAxisOriginal*semiMajorAxisOriginal*semiMajorAxisOriginal) );
+					orbit.period = Math.Sqrt(
+						(periodOriginal*periodOriginal) *
+						(orbit.periapsis*orbit.periapsis*orbit.periapsis) /
+						(semiMajorAxisOriginal*semiMajorAxisOriginal*semiMajorAxisOriginal)
+					);
 				}
 			}
 

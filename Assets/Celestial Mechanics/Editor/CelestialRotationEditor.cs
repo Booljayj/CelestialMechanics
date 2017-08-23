@@ -46,7 +46,7 @@ namespace CelestialMechanics {
 
 			EditorGUILayout.Slider(rightAscension, 0f, 360f, raGUI);
 			EditorGUILayout.Slider(declination, 0f, 360f, decGUI);
-				EditorGUILayout.Space();
+			EditorGUILayout.Space();
 
 			EditorGUILayout.LabelField("Control", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(sim, simGUI);

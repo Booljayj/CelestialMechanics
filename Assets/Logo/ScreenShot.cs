@@ -7,7 +7,7 @@ public class ScreenShot : MonoBehaviour {
 
 	void Update() {
 		if (Input.GetMouseButtonDown(0)) {
-			Application.CaptureScreenshot(Application.dataPath + "/"+fName+".png", 2);
+			ScreenCapture.CaptureScreenshot(Application.dataPath + "/"+fName+".png", 2);
 			Debug.Log("Screenshot taken");
 		}
 	}

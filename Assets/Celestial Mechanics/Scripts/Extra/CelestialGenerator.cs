@@ -40,22 +40,26 @@ namespace CelestialMechanics {
 			int planets = Random.Range(Mathf.RoundToInt(numberOfPlanets.x), Mathf.RoundToInt(numberOfPlanets.y));
 			int moonsTotal = 0;
 			for (int i=0; i<planets; i++) {
-				GameObject planet = GenerateBody(gameObject, 
-				                                 string.Format("planet {0}",i),
-				                                 planetColor, 
-				                                 planetEccentricityRange, 
-				                                 planetDistanceRange, 
-				                                 planetSizeRange);
+				GameObject planet = GenerateBody(
+					gameObject,
+				    string.Format("planet {0}",i),
+					planetColor,
+				    planetEccentricityRange,
+				    planetDistanceRange,
+				    planetSizeRange
+				);
 
 				//Generate Moons
 				int moons = Random.Range(Mathf.RoundToInt(numberOfMoons.x), Mathf.RoundToInt(numberOfMoons.y));
 				for (int j=0; j<moons; j++) {
-					GenerateBody(planet, 
-					             string.Format("moon {0}",j), 
-					             moonColor,
-					             Vector2.zero, //moons have a circular orbit
-					             moonDistanceRange, 
-					             moonSizeRange);
+					GenerateBody(
+						planet,
+					    string.Format("moon {0}",j),
+					    moonColor,
+					    Vector2.zero, //moons have a circular orbit
+						moonDistanceRange,
+					    moonSizeRange
+					);
 				}
 				moonsTotal += moons;
 			}
@@ -63,17 +67,23 @@ namespace CelestialMechanics {
 			//Generate Comets
 			int comets = Random.Range(Mathf.RoundToInt(numberOfComets.x), Mathf.RoundToInt(numberOfComets.y));
 			for (int k=0; k<comets; k++) {
-				GenerateBody(gameObject,
-				             string.Format("comet {0}",k),
-				             cometColor,
-				             cometEccentricityRange,
-				             cometDistanceRange,
-				             cometSizeRange);
+				GenerateBody(
+					gameObject,
+				    string.Format("comet {0}",k),
+				    cometColor,
+				    cometEccentricityRange,
+				    cometDistanceRange,
+				    cometSizeRange
+				);
 			}
 
 			watch.Stop();
-			Debug.Log(string.Format("Generated {0} planets, {1} moons, and {2} comets in {3}ms",
-			          planets, moonsTotal, comets, watch.ElapsedMilliseconds));
+			Debug.Log(
+				string.Format(
+					"Generated {0} planets, {1} moons, and {2} comets in {3}ms",
+			    	planets, moonsTotal, comets, watch.ElapsedMilliseconds
+				)
+			);
 		}
 
 		GameObject GenerateBody(GameObject parent, string name, Color color, Vector2 eccentricityRange, Vector2 distanceRange, Vector2 sizeRange) {
